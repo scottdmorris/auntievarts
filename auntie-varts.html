@@ -42,6 +42,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .sdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);border:none;cursor:pointer;padding:0;transition:background .3s;}
 .sdot.on{background:#fff;}
 
+/* PRESS BAR */
+.press-bar{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1.2rem 2.5rem;display:flex;align-items:center;gap:3rem;overflow:hidden;}
+.press-label{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.press-scroll{display:flex;gap:3rem;align-items:center;animation:scrollP 20s linear infinite;}
+.press-scroll span{font-family:'Playfair Display',serif;font-size:.88rem;font-style:italic;color:var(--sand);white-space:nowrap;}
+@keyframes scrollP{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* SECTIONS */
 .swrap{padding:6rem 2.5rem;}
@@ -222,14 +228,7 @@ footer{background:var(--black);color:var(--cream);padding:4rem 2.5rem 2rem;}
   </div>
 </section>
 
-<!-- PRESS -->
-<div class="press-bar">
-  <span class="press-label">As seen in</span>
-  <div class="press-scroll">
-    <span>The Stranger</span><span>·</span><span>Seattle Met</span><span>·</span><span>Artsy</span><span>·</span><span>Hypebeast</span><span>·</span><span>Juxtapoz</span><span>·</span>
-    <span>The Stranger</span><span>·</span><span>Seattle Met</span><span>·</span><span>Artsy</span><span>·</span><span>Hypebeast</span><span>·</span><span>Juxtapoz</span>
-  </div>
-</div>
+
 
 <!-- GALLERY -->
 <section id="gallery">
@@ -534,7 +533,7 @@ footer{background:var(--black);color:var(--cream);padding:4rem 2.5rem 2rem;}
       <h4>Connect</h4>
       <a href="#">Instagram</a>
       <a href="#">Newsletter</a>
-      <a href="#">studio@auntievarts.com</a>
+      <a href="#"><span class="__cf_email__" data-cfemail="285b5c5d4c414768495d465c414d5e495a5c5b064b4745">[email&#160;protected]</span></a>
       <a href="#">Press & Partnerships</a>
     </div>
   </div>
@@ -555,7 +554,7 @@ footer{background:var(--black);color:var(--cream);padding:4rem 2.5rem 2rem;}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // SLIDESHOW
 let si=0;
 const slides=document.querySelectorAll('.hero-slide');
@@ -601,10 +600,4 @@ let cc=0;
 function addCart(n){cc++;document.getElementById('cartBtn').textContent=`Cart (${cc})`;showToast(`"${n}" added to cart`);}
 
 // BOOKING SUBMIT
-function submitBook(){showToast("Request sent! I'll be in touch within 48 hrs ✦");document.getElementById('bform').style.display='none';picked=null;buildCal();}
-
-// TOAST
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
-</script>
-</body>
-</html>
+function submitBook(){showToast("Request sent! I'll be in touch within 48 hrs ✦");document.getElementById('bform').style.display='none';picked=nul
