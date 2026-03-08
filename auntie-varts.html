@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Auntie Varts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--cream:#F7F3EE;--black:#141210;--rust:#C05A2E;--sand:#D9C9B4;--muted:#8A8278;--rule:#E0D9D0;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--black);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2.5rem;background:var(--cream);border-bottom:1px solid var(--rule);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;font-style:italic;color:var(--black);text-decoration:none;}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+.nav-links a{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--black);}
+.nav-cart{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;background:var(--black);color:var(--cream);padding:.5rem 1.1rem;cursor:pointer;border:none;font-family:'Jost',sans-serif;transition:background .2s;}
+.nav-cart:hover{background:var(--rust);}
+
+/* HERO */
+#hero{min-height:100vh;padding-top:4.5rem;display:grid;grid-template-columns:1fr 1fr;}
+.hero-text{display:flex;flex-direction:column;justify-content:center;padding:5rem 3rem 5rem 2.5rem;border-right:1px solid var(--rule);}
+.hero-kicker{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:1.8rem;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:1.0;margin-bottom:1.2rem;}
+.hero-title em{font-style:italic;color:var(--rust);}
+.hero-quote{font-size:1rem;font-weight:300;line-height:1.85;color:var(--muted);max-width:38ch;margin-bottom:2.5rem;border-left:3px solid var(--rust);padding-left:1.2rem;font-style:italic;}
+.btn{display:inline-block;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.9rem 2rem;text-decoration:none;cursor:pointer;border:none;font-family:'Jost',sans-serif;transition:background .2s,color .2s;}
+.btn-dark{background:var(--black);color:var(--cream);}
+.btn-dark:hover{background:var(--rust);}
+.btn-outline{border:1px solid var(--black);color:var(--black);background:none;}
+.btn-outline:hover{background:var(--black);color:var(--cream);}
+.hero-right{position:relative;overflow:hidden;background:var(--sand);}
+.hero-slideshow{width:100%;height:100%;position:relative;}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;display:flex;align-items:center;justify-content:center;}
+.hero-slide.active{opacity:1;}
+.hero-slide svg{width:100%;height:100%;object-fit:cover;}
+.slide-dots{position:absolute;bottom:1.5rem;left:0;right:0;display:flex;justify-content:center;gap:.5rem;z-index:2;}
+.sdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);border:none;cursor:pointer;padding:0;transition:background .3s;}
+.sdot.on{background:#fff;}
+
+/* PRESS BAR */
+.press-bar{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1.2rem 2.5rem;display:flex;align-items:center;gap:3rem;overflow:hidden;}
+.press-label{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.press-scroll{display:flex;gap:3rem;align-items:center;animation:scrollP 20s linear infinite;}
+.press-scroll span{font-family:'Playfair Display',serif;font-size:.88rem;font-style:italic;color:var(--sand);white-space:nowrap;}
+@keyframes scrollP{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTIONS */
+.swrap{padding:6rem 2.5rem;}
+.slabel{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:.8rem;}
+.shead{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:3rem;}
+.shead em{font-style:italic;}
+
+/* GALLERY */
+#gallery{border-top:1px solid var(--rule);}
+.masonry{columns:3;column-gap:1rem;}
+.gtile{break-inside:avoid;margin-bottom:1rem;position:relative;overflow:hidden;cursor:pointer;background:var(--sand);}
+.gtile svg{display:block;width:100%;transition:transform .6s cubic-bezier(.25,.1,.25,1);}
+.gtile:hover svg{transform:scale(1.04);}
+.gover{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,16,.72) 0%,transparent 55%);opacity:0;transition:opacity .35s;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem;}
+.gtile:hover .gover{opacity:1;}
+.gtname{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:#fff;}
+.gtmeta{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:.2rem;}
+
+/* SHOP */
+#shop{background:#F0EBE3;border-top:1px solid var(--rule);}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+.scard{cursor:pointer;}
+.simg{width:100%;aspect-ratio:3/4;background:var(--sand);margin-bottom:.9rem;overflow:hidden;position:relative;}
+.simg svg{width:100%;height:100%;transition:transform .5s;}
+.scard:hover .simg svg{transform:scale(1.04);}
+.stag{position:absolute;top:.7rem;left:.7rem;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;background:var(--rust);color:#fff;padding:.28rem .65rem;}
+.sname{font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;margin-bottom:.3rem;}
+.srow{display:flex;justify-content:space-between;align-items:center;}
+.sprice{font-size:.85rem;color:var(--muted);}
+.sabtn{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid var(--rule);padding:.38rem .8rem;cursor:pointer;font-family:'Jost',sans-serif;color:var(--black);transition:all .2s;}
+.sabtn:hover{background:var(--black);color:var(--cream);border-color:var(--black);}
+
+/* BOOKING */
+#booking{border-top:1px solid var(--rule);}
+.bgrid{display:grid;grid-template-columns:1fr 1.3fr;gap:5rem;align-items:start;}
+.bleft h3{font-family:'Playfair Display',serif;font-size:1.35rem;font-style:italic;font-weight:400;line-height:1.55;margin-bottom:1.5rem;color:var(--muted);}
+.svlist{list-style:none;}
+.svlist li{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:1px solid var(--rule);font-size:.9rem;}
+.svlist li strong{font-weight:500;}
+.svlist li span{font-size:.68rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.cal{border:1px solid var(--rule);padding:1.8rem;background:var(--cream);}
+.cal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+.cal-mo{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;}
+.cal-arr{display:flex;gap:.4rem;}
+.cal-arr button{width:2rem;height:2rem;border:1px solid var(--rule);background:none;cursor:pointer;font-size:.8rem;color:var(--muted);transition:all .2s;}
+.cal-arr button:hover{border-color:var(--black);color:var(--black);}
+.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:.4rem;}
+.cal-wd span{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.4rem 0;}
+.cal-cells{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cc{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.82rem;cursor:pointer;transition:all .15s;border:1px solid transparent;font-family:'Jost',sans-serif;font-weight:300;}
+.cc:hover:not(.empty):not(.booked){border-color:var(--rust);color:var(--rust);}
+.cc.today{background:var(--black);color:var(--cream);}
+.cc.booked{color:var(--rule);cursor:default;}
+.cc.avail{color:var(--rust);}
+.cc.picked{border-color:var(--rust);color:var(--rust);font-weight:500;}
+.cc.empty{cursor:default;}
+.cal-leg{display:flex;gap:1.5rem;padding-top:1.2rem;margin-top:1.2rem;border-top:1px solid var(--rule);}
+.leg{display:flex;align-items:center;gap:.4rem;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.ldot{width:7px;height:7px;border-radius:50%;}
+.bform{margin-top:1.2rem;display:none;}
+.bform input,.bform select,.bform textarea{width:100%;padding:.8rem 1rem;margin-bottom:.6rem;border:1px solid var(--rule);background:transparent;font-family:'Jost',sans-serif;font-size:.9rem;color:var(--black);outline:none;transition:border-color .2s;}
+.bform input:focus,.bform select:focus,.bform textarea:focus{border-color:var(--rust);}
+.bform textarea{height:90px;resize:vertical;}
+.bsub{width:100%;padding:.95rem;background:var(--black);color:var(--cream);font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;border:none;cursor:pointer;transition:background .2s;}
+.bsub:hover{background:var(--rust);}
+
+/* JOURNAL */
+#journal{background:#F0EBE3;border-top:1px solid var(--rule);}
+.jfeat{display:grid;grid-template-columns:1.3fr 1fr;gap:3rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule);}
+.jfimg{background:var(--sand);overflow:hidden;}
+.jfimg svg{display:block;width:100%;transition:transform .6s;}
+.jfimg:hover svg{transform:scale(1.03);}
+.jfbody{display:flex;flex-direction:column;justify-content:center;}
+.jtag{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:.8rem;}
+.jftitle{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;line-height:1.22;margin-bottom:1rem;}
+.jfex{font-size:.92rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem;}
+.jdate{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.jgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+.jcard{cursor:pointer;}
+.jcimg{background:var(--sand);margin-bottom:.9rem;overflow:hidden;}
+.jcimg svg{display:block;width:100%;transition:transform .5s;}
+.jcard:hover .jcimg svg{transform:scale(1.04);}
+.jctag{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin-bottom:.4rem;}
+.jctitle{font-family:'Playfair Display',serif;font-size:1.05rem;line-height:1.3;margin-bottom:.5rem;}
+.jcdate{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+/* ABOUT */
+.about-strip{border-top:1px solid var(--rule);display:grid;grid-template-columns:1fr 1fr;}
+.aimg{background:var(--sand);min-height:460px;overflow:hidden;}
+.aimg svg{width:100%;height:100%;}
+.abody{padding:5rem 3rem;display:flex;flex-direction:column;justify-content:center;}
+.abody blockquote{font-family:'Playfair Display',serif;font-size:1.35rem;font-style:italic;font-weight:400;line-height:1.65;border-left:3px solid var(--rust);padding-left:1.5rem;margin-bottom:2rem;}
+.abody p{font-size:.9rem;line-height:1.85;color:var(--muted);margin-bottom:1.2rem;}
+
+/* FOOTER */
+footer{background:var(--black);color:var(--cream);padding:4rem 2.5rem 2rem;}
+.ftop{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:2rem;}
+.fbrand p{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;font-style:italic;margin-bottom:1rem;}
+.fbrand span{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.7;display:block;}
+.fcol h4{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1.2rem;}
+.fcol a{display:block;font-size:.8rem;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:.6rem;transition:color .2s;}
+.fcol a:hover{color:#fff;}
+.fbot{display:flex;justify-content:space-between;align-items:center;}
+.fbot span{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);}
+
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(20,18,16,.94);z-index:500;align-items:center;justify-content:center;}
+.lb.open{display:flex;}
+.lbbox{max-width:70vw;position:relative;text-align:center;}
+.lbcap{font-family:'Playfair Display',serif;font-style:italic;color:rgba(255,255,255,.6);margin-top:1rem;font-size:.95rem;}
+.lbclose{position:absolute;top:-2.5rem;right:0;background:none;border:none;color:rgba(255,255,255,.5);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+.lbclose:hover{color:#fff;}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--rust);color:#fff;padding:.9rem 1.4rem;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;font-family:'Jost',sans-serif;z-index:600;transform:translateY(4rem);opacity:0;transition:all .3s;}
+.toast.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Auntie Varts</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#booking">Book</a></li>
+    <li><a href="#journal">Journal</a></li>
+    <li><button class="nav-cart" id="cartBtn">Cart (0)</button></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-text">
+    <p class="hero-kicker">Painting & Illustration</p>
+    <h1 class="hero-title">Art that<br>makes you<br><em>feel seen.</em></h1>
+    <p class="hero-quote">"I paint so that someone out there feels a little less alone. That's the whole thing."</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+      <a href="#gallery" class="btn btn-dark">Explore the Work</a>
+      <a href="#shop" class="btn btn-outline">Shop Prints</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-slideshow" id="slideshow">
+      <div class="hero-slide active">
+        <svg viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+          <rect width="600" height="700" fill="#D4C4AE"/>
+          <ellipse cx="300" cy="330" rx="190" ry="240" fill="#C05A2E" opacity=".62"/>
+          <ellipse cx="235" cy="268" rx="115" ry="150" fill="#D9C9B4" opacity=".52"/>
+          <ellipse cx="355" cy="395" rx="92" ry="118" fill="#141210" opacity=".27"/>
+          <ellipse cx="300" cy="330" rx="52" ry="72" fill="#F7F3EE" opacity=".28"/>
+        </svg>
+      </div>
+      <div class="hero-slide">
+        <svg viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+          <rect width="600" height="700" fill="#E0D8CC"/>
+          <path d="M100,100 Q300,40 500,160 Q400,360 300,520 Q200,360 100,100Z" fill="#C05A2E" opacity=".45"/>
+          <path d="M150,190 Q300,130 450,240 Q360,400 300,530 Q240,400 150,190Z" fill="#8A8278" opacity=".32"/>
+          <circle cx="300" cy="300" r="115" fill="#F7F3EE" opacity=".18"/>
+          <circle cx="300" cy="300" r="38" fill="#141210" opacity=".5"/>
+        </svg>
+      </div>
+      <div class="hero-slide">
+        <svg viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+          <rect width="600" height="700" fill="#C8C0B2"/>
+          <rect x="60" y="80" width="155" height="540" fill="#C05A2E" opacity=".48" rx="4"/>
+          <rect x="245" y="155" width="118" height="425" fill="#D9C9B4" opacity=".58" rx="4"/>
+          <rect x="393" y="58" width="158" height="562" fill="#141210" opacity=".28" rx="4"/>
+        </svg>
+      </div>
+      <div class="slide-dots" id="dots">
+        <button class="sdot on" onclick="goSlide(0)"></button>
+        <button class="sdot" onclick="goSlide(1)"></button>
+        <button class="sdot" onclick="goSlide(2)"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<div class="press-bar">
+  <span class="press-label">As seen in</span>
+  <div class="press-scroll">
+    <span>The Stranger</span><span>·</span><span>Seattle Met</span><span>·</span><span>Artsy</span><span>·</span><span>Hypebeast</span><span>·</span><span>Juxtapoz</span><span>·</span>
+    <span>The Stranger</span><span>·</span><span>Seattle Met</span><span>·</span><span>Artsy</span><span>·</span><span>Hypebeast</span><span>·</span><span>Juxtapoz</span>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="swrap">
+    <p class="slabel">Selected Works</p>
+    <h2 class="shead">The <em>Gallery</em></h2>
+    <div class="masonry">
+
+      <div class="gtile" onclick="openLb('Solitude I','Oil on Canvas · 24×36 · 2024')">
+        <svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="560" fill="#D4C4AE"/>
+          <ellipse cx="200" cy="272" rx="152" ry="202" fill="#C05A2E" opacity=".6"/>
+          <ellipse cx="162" cy="222" rx="96" ry="132" fill="#D9C9B4" opacity=".5"/>
+          <ellipse cx="236" cy="312" rx="76" ry="99" fill="#141210" opacity=".27"/>
+        </svg>
+        <div class="gover"><p class="gtname">Solitude I</p><p class="gtmeta">Oil · 2024</p></div>
+      </div>
+
+      <div class="gtile" onclick="openLb('Bloom & Burn','Acrylic · 18×24 · 2024')">
+        <svg viewBox="0 0 400 310" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="310" fill="#E0D8CC"/>
+          <path d="M80,55 Q200,18 322,78 Q262,182 200,272 Q138,182 80,55Z" fill="#C05A2E" opacity=".5"/>
+          <circle cx="200" cy="168" r="72" fill="#F7F3EE" opacity=".3"/>
+          <circle cx="200" cy="168" r="28" fill="#141210" opacity=".55"/>
+        </svg>
+        <div class="gover"><p class="gtname">Bloom & Burn</p><p class="gtmeta">Acrylic · 2024</p></div>
+      </div>
+
+      <div class="gtile" onclick="openLb('Tide Memory','Watercolour · 30×40 · 2023')">
+        <svg viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="480" fill="#C8C0B2"/>
+          <path d="M0,282 Q100,162 200,242 Q300,312 400,202 L400,480 L0,480Z" fill="#C05A2E" opacity=".37"/>
+          <path d="M0,322 Q100,222 200,292 Q300,352 400,252 L400,480 L0,480Z" fill="#141210" opacity=".21"/>
+          <circle cx="100" cy="178" r="54" fill="#D9C9B4" opacity=".54"/>
+          <circle cx="332" cy="128" r="72" fill="#C05A2E" opacity=".27"/>
+        </svg>
+        <div class="gover"><p class="gtname">Tide Memory</p><p class="gtmeta">Watercolour · 2023</p></div>
+      </div>
+
+      <div class="gtile" onclick="openLb('Inner Ring','Ink & Gouache · 16×20 · 2024')">
+        <svg viewBox="0 0 400 362" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="362" fill="#D9D3CA"/>
+          <circle cx="200" cy="181" r="142" fill="#F7F3EE" opacity=".68"/>
+          <circle cx="200" cy="181" r="96" fill="#C05A2E" opacity=".47"/>
+          <circle cx="200" cy="181" r="50" fill="#141210" opacity=".57"/>
+          <circle cx="200" cy="181" r="15" fill="#F7F3EE"/>
+        </svg>
+        <div class="gover"><p class="gtname">Inner Ring</p><p class="gtmeta">Ink & Gouache · 2024</p></div>
+      </div>
+
+      <div class="gtile" onclick="openLb('Hierarchy','Mixed Media · 20×28 · 2023')">
+        <svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="520" fill="#E2DCD0"/>
+          <polygon points="200,38 372,482 28,482" fill="#C05A2E" opacity=".45"/>
+          <polygon points="200,98 312,462 88,462" fill="#D9C9B4" opacity=".5"/>
+          <polygon points="200,178 272,442 128,442" fill="#141210" opacity=".4"/>
+        </svg>
+        <div class="gover"><p class="gtname">Hierarchy</p><p class="gtmeta">Mixed Media · 2023</p></div>
+      </div>
+
+      <div class="gtile" onclick="openLb('Unraveling','Oil Pastel · 12×16 · 2024')">
+        <svg viewBox="0 0 400 298" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="298" fill="#CAC2B5"/>
+          <path d="M50,149 C100,79 150,219 200,149 C250,79 300,219 350,149" stroke="#C05A2E" stroke-width="19" fill="none" opacity=".68" stroke-linecap="round"/>
+          <path d="M50,179 C100,109 150,249 200,179 C250,109 300,249 350,179" stroke="#141210" stroke-width="10" fill="none" opacity=".4" stroke-linecap="round"/>
+          <path d="M50,119 C100,49 150,189 200,119 C250,49 300,189 350,119" stroke="#D9C9B4" stroke-width="8" fill="none" opacity=".6" stroke-linecap="round"/>
+        </svg>
+        <div class="gover"><p class="gtname">Unraveling</p><p class="gtmeta">Oil Pastel · 2024</p></div>
+      </div>
+
+    </div>
+    <div style="margin-top:2.5rem;">
+      <a href="#" class="btn btn-outline" onclick="showToast('Full gallery coming soon!')">View All Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="shop">
+  <div class="swrap">
+    <p class="slabel">Limited Edition Prints</p>
+    <h2 class="shead">Shop the <em>Work</em></h2>
+    <div class="sgrid">
+
+      <div class="scard">
+        <div class="simg">
+          <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="400" fill="#D4C4AE"/>
+            <ellipse cx="150" cy="195" rx="116" ry="156" fill="#C05A2E" opacity=".6"/>
+            <ellipse cx="120" cy="160" rx="73" ry="99" fill="#D9C9B4" opacity=".5"/>
+          </svg>
+          <span class="stag">New</span>
+        </div>
+        <p class="sname">Solitude I</p>
+        <div class="srow"><span class="sprice">$65</span><button class="sabtn" onclick="addCart('Solitude I')">Add to Cart</button></div>
+      </div>
+
+      <div class="scard">
+        <div class="simg">
+          <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="400" fill="#E0D8CC"/>
+            <path d="M60,48 Q150,18 242,72 Q195,202 150,332 Q105,202 60,48Z" fill="#C05A2E" opacity=".47"/>
+            <circle cx="150" cy="200" r="52" fill="#F7F3EE" opacity=".28"/>
+            <circle cx="150" cy="200" r="20" fill="#141210" opacity=".5"/>
+          </svg>
+          <span class="stag" style="background:var(--muted)">Ltd Ed</span>
+        </div>
+        <p class="sname">Bloom & Burn</p>
+        <div class="srow"><span class="sprice">$95</span><button class="sabtn" onclick="addCart('Bloom & Burn')">Add to Cart</button></div>
+      </div>
+
+      <div class="scard">
+        <div class="simg">
+          <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="400" fill="#D9D3CA"/>
+            <circle cx="150" cy="195" r="132" fill="#F7F3EE" opacity=".64"/>
+            <circle cx="150" cy="195" r="91" fill="#C05A2E" opacity=".46"/>
+            <circle cx="150" cy="195" r="48" fill="#141210" opacity=".55"/>
+            <circle cx="150" cy="195" r="14" fill="#F7F3EE"/>
+          </svg>
+        </div>
+        <p class="sname">Inner Ring</p>
+        <div class="srow"><span class="sprice">$55</span><button class="sabtn" onclick="addCart('Inner Ring')">Add to Cart</button></div>
+      </div>
+
+      <div class="scard">
+        <div class="simg">
+          <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="400" fill="#E2DCD0"/>
+            <polygon points="150,28 292,382 8,382" fill="#C05A2E" opacity=".43"/>
+            <polygon points="150,88 246,366 54,366" fill="#D9C9B4" opacity=".47"/>
+            <polygon points="150,162 212,346 88,346" fill="#141210" opacity=".38"/>
+          </svg>
+        </div>
+        <p class="sname">Hierarchy</p>
+        <div class="srow"><span class="sprice">$60</span><button class="sabtn" onclick="addCart('Hierarchy')">Add to Cart</button></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="swrap">
+    <p class="slabel">Commissions & Consultations</p>
+    <h2 class="shead">Book a <em>Session</em></h2>
+    <div class="bgrid">
+      <div class="bleft">
+        <h3>Let's make something that belongs entirely to you.</h3>
+        <ul class="svlist">
+          <li><strong>Portrait Commission</strong><span>From $350 · 3–4 wks</span></li>
+          <li><strong>Custom Illustration</strong><span>From $200 · 2–3 wks</span></li>
+          <li><strong>Studio Consultation</strong><span>$80 · 60 min</span></li>
+          <li><strong>Art Direction</strong><span>$120 · 90 min</span></li>
+          <li><strong>Live Event Painting</strong><span>From $500</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="cal">
+          <div class="cal-top">
+            <span class="cal-mo" id="calLabel">March 2026</span>
+            <div class="cal-arr">
+              <button onclick="shiftMo(-1)">←</button>
+              <button onclick="shiftMo(1)">→</button>
+            </div>
+          </div>
+          <div class="cal-wd">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="cal-cells" id="calCells"></div>
+          <div class="cal-leg">
+            <div class="leg"><div class="ldot" style="background:var(--rust)"></div>Available</div>
+            <div class="leg"><div class="ldot" style="background:var(--rule)"></div>Booked</div>
+            <div class="leg"><div class="ldot" style="background:var(--black)"></div>Today</div>
+          </div>
+        </div>
+        <div class="bform" id="bform">
+          <input type="text" placeholder="Your name"/>
+          <input type="email" placeholder="Email address"/>
+          <select>
+            <option value="">Select a service</option>
+            <option>Portrait Commission</option>
+            <option>Custom Illustration</option>
+            <option>Studio Consultation</option>
+            <option>Art Direction</option>
+            <option>Live Event Painting</option>
+          </select>
+          <textarea placeholder="Tell me about your project or vision..."></textarea>
+          <button class="bsub" onclick="submitBook()">Request This Date →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNAL -->
+<section id="journal">
+  <div class="swrap">
+    <p class="slabel">Studio Journal</p>
+    <h2 class="shead">From the <em>Blog</em></h2>
+    <div class="jfeat">
+      <div class="jfimg">
+        <svg viewBox="0 0 580 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="580" height="400" fill="#D4C4AE"/>
+          <path d="M0,242 Q145,102 290,222 Q435,332 580,182 L580,400 L0,400Z" fill="#C05A2E" opacity=".37"/>
+          <path d="M0,282 Q145,162 290,267 Q435,367 580,232 L580,400 L0,400Z" fill="#141210" opacity=".21"/>
+          <circle cx="120" cy="148" r="70" fill="#D9C9B4" opacity=".54"/>
+          <circle cx="462" cy="108" r="92" fill="#C05A2E" opacity=".27"/>
+        </svg>
+      </div>
+      <div class="jfbody">
+        <p class="jtag">Process</p>
+        <h3 class="jftitle">On Letting a Painting Breathe: What Silence Taught Me About Negative Space</h3>
+        <p class="jfex">There's a moment in every piece where I have to fight the urge to fill every corner. That restraint — that deliberate silence — is where the work finally comes alive.</p>
+        <p class="jdate">12 Feb 2026 · 8 min read</p>
+      </div>
+    </div>
+    <div class="jgrid">
+      <div class="jcard">
+        <div class="jcimg">
+          <svg viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="380" height="240" fill="#C8C0B2"/>
+            <rect x="28" y="28" width="102" height="182" fill="#C05A2E" opacity=".41" rx="3"/>
+            <rect x="148" y="68" width="82" height="142" fill="#D9C9B4" opacity=".54" rx="3"/>
+            <rect x="244" y="18" width="112" height="192" fill="#8A8278" opacity=".39" rx="3"/>
+          </svg>
+        </div>
+        <p class="jctag">Materials</p>
+        <h4 class="jctitle">Why I Finally Switched to Cold-Press Paper</h4>
+        <p class="jcdate">28 Jan 2026 · 5 min</p>
+      </div>
+      <div class="jcard">
+        <div class="jcimg">
+          <svg viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="380" height="240" fill="#E2DCD0"/>
+            <polygon points="190,18 362,222 18,222" fill="#C05A2E" opacity=".41"/>
+            <polygon points="190,64 302,212 78,212" fill="#D9C9B4" opacity=".44"/>
+            <circle cx="190" cy="138" r="28" fill="#141210" opacity=".3"/>
+          </svg>
+        </div>
+        <p class="jctag">Inspiration</p>
+        <h4 class="jctitle">What a Week in the Mountains Taught Me About Colour</h4>
+        <p class="jcdate">5 Jan 2026 · 6 min</p>
+      </div>
+      <div class="jcard">
+        <div class="jcimg">
+          <svg viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg">
+            <rect width="380" height="240" fill="#D9D3CA"/>
+            <circle cx="190" cy="120" r="102" fill="#F7F3EE" opacity=".6"/>
+            <circle cx="190" cy="120" r="69" fill="#C05A2E" opacity=".44"/>
+            <circle cx="190" cy="120" r="36" fill="#141210" opacity=".5"/>
+            <circle cx="190" cy="120" r="10" fill="#F7F3EE"/>
+          </svg>
+        </div>
+        <p class="jctag">Studio Life</p>
+        <h4 class="jctitle">My Morning Ritual Before Touching a Brush</h4>
+        <p class="jcdate">18 Dec 2025 · 4 min</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about-strip">
+  <div class="aimg">
+    <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="height:100%;min-height:460px">
+      <rect width="600" height="500" fill="#C8C0B2"/>
+      <ellipse cx="300" cy="222" rx="162" ry="202" fill="#141210" opacity=".23"/>
+      <ellipse cx="262" cy="182" rx="102" ry="132" fill="#C05A2E" opacity=".34"/>
+      <ellipse cx="300" cy="152" rx="56" ry="62" fill="#D4C4AE" opacity=".7"/>
+      <rect x="244" y="212" width="112" height="172" rx="18" fill="#D4C4AE" opacity=".64"/>
+      <rect x="214" y="220" width="36" height="112" rx="14" fill="#D4C4AE" opacity=".59"/>
+      <rect x="350" y="220" width="36" height="112" rx="14" fill="#D4C4AE" opacity=".59"/>
+    </svg>
+  </div>
+  <div class="abody">
+    <p class="slabel">The Artist</p>
+    <h2 class="shead" style="margin-bottom:1.5rem">Meet <em>Auntie Varts</em></h2>
+    <blockquote>"I paint because there are still so many ideas living in my brain — and I have two hands to bring them into the world."</blockquote>
+    <p>A painter and illustrator rooted in the belief that art should feel like a mirror — something that reflects you back to yourself in a new light.</p>
+    <p>Commissions open. Prints ship worldwide.</p>
+    <a href="#booking" class="btn btn-dark" style="margin-top:.5rem;display:inline-block">Work Together →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ftop">
+    <div class="fbrand">
+      <p>Auntie Varts</p>
+      <span>Painting. Illustration. Prints.<br>Art that makes you feel seen.</span>
+    </div>
+    <div class="fcol">
+      <h4>Navigate</h4>
+      <a href="#gallery">Gallery</a>
+      <a href="#shop">Shop Prints</a>
+      <a href="#booking">Book a Session</a>
+      <a href="#journal">Studio Journal</a>
+    </div>
+    <div class="fcol">
+      <h4>Connect</h4>
+      <a href="#">Instagram</a>
+      <a href="#">Newsletter</a>
+      <a href="#">studio@auntievarts.com</a>
+      <a href="#">Press & Partnerships</a>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>© 2026 Auntie Varts Studios</span>
+    <span>Privacy · Terms</span>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <div class="lbbox" onclick="event.stopPropagation()">
+    <button class="lbclose" onclick="closeLb()">✕ Close</button>
+    <div id="lbContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// SLIDESHOW
+let si=0;
+const slides=document.querySelectorAll('.hero-slide');
+const dots=document.querySelectorAll('.sdot');
+function goSlide(i){slides[si].classList.remove('active');dots[si].classList.remove('on');si=i;slides[si].classList.add('active');dots[si].classList.add('on');}
+setInterval(()=>goSlide((si+1)%slides.length),4200);
+
+// CALENDAR
+let cY=2026,cM=2,picked=null;
+const booked=[3,7,12,14,19,22,25];
+const avail=[5,10,11,17,18,24,26,27];
+const MOS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function buildCal(){
+  document.getElementById('calLabel').textContent=`${MOS[cM]} ${cY}`;
+  const g=document.getElementById('calCells'); g.innerHTML='';
+  const first=new Date(cY,cM,1).getDay();
+  const tot=new Date(cY,cM+1,0).getDate();
+  const now=new Date(); const isNow=now.getFullYear()===cY&&now.getMonth()===cM;
+  for(let e=0;e<first;e++){const d=document.createElement('div');d.className='cc empty';g.appendChild(d);}
+  for(let d=1;d<=tot;d++){
+    const el=document.createElement('div'); el.textContent=d;
+    let c='cc';
+    if(isNow&&d===now.getDate())c+=' today';
+    else if(booked.includes(d))c+=' booked';
+    else if(avail.includes(d))c+=' avail';
+    if(picked===d)c+=' picked';
+    el.className=c; el.onclick=()=>pickDay(d); g.appendChild(el);
+  }
+}
+function pickDay(d){if(booked.includes(d))return;picked=d;buildCal();document.getElementById('bform').style.display='block';showToast('Date selected — fill in your details below');}
+function shiftMo(dir){cM+=dir;if(cM<0){cM=11;cY--;}if(cM>11){cM=0;cY++;}picked=null;document.getElementById('bform').style.display='none';buildCal();}
+buildCal();
+
+// LIGHTBOX
+function openLb(t,m){
+  document.getElementById('lbContent').innerHTML=`<div style="background:#1e1b18;padding:4rem 3rem;text-align:center;min-width:320px;"><p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.6rem;color:#F7F3EE;margin-bottom:.6rem;">${t}</p><p style="font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#8A8278;">${m}</p></div>`;
+  document.getElementById('lb').classList.add('open');
+}
+function closeLb(){document.getElementById('lb').classList.remove('open');}
+
+// CART
+let cc=0;
+function addCart(n){cc++;document.getElementById('cartBtn').textContent=`Cart (${cc})`;showToast(`"${n}" added to cart`);}
+
+// BOOKING SUBMIT
+function submitBook(){showToast("Request sent! I'll be in touch within 48 hrs ✦");document.getElementById('bform').style.display='none';picked=null;buildCal();}
+
+// TOAST
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+</script>
+</body>
+</html>
